@@ -1,0 +1,111 @@
+diff --git a/src/elements/panel.ts b/src/elements/panel.ts
+index 3c05667..8268506 100644
+--- a/src/elements/panel.ts
++++ b/src/elements/panel.ts
+@@ -9,6 +9,7 @@ import {
+   putTranslateTaskAtHead,
+ } from "../utils/task";
+ import type { TranslationServices } from "../modules/services";
++import "./mathTextbox"; // Import the math textbox custom element
+ 
+ //@ts-expect-error addon instance not typed
+ const services = Zotero[config.addonInstance].data.translate
+@@ -36,6 +37,10 @@ export class TranslatorPanel extends PluginCEBase {
+     rel="stylesheet"
+     href="chrome://${config.addonRef}/content/styles/panel.css"
+   ></html:link>
++  <html:link
++    rel="stylesheet"
++    href="chrome://${config.addonRef}/content/styles/katex.min.css"
++  ></html:link>
+ </linkset>
+ <hbox id="engine" align="center">
+   <menulist id="services" native="true">
+@@ -70,7 +75,7 @@ export class TranslatorPanel extends PluginCEBase {
+   <html:div id="resizer" class="draggable-container">
+     <html:div class="separator"></html:div>
+   </html:div>
+-  <editable-text id="result-text" multiline="true" />
++  <math-textbox id="result-text"></math-textbox>
+ </html:div>
+ <html:div class="separator"></html:div>
+ <html:div class="options-container">
+@@ -184,13 +189,15 @@ export class TranslatorPanel extends PluginCEBase {
+       putTranslateTaskAtHead(task.id);
+     });
+ 
+-    this._queryID("result-text")?.addEventListener("input", (e) => {
++    this._queryID("result-text")?.addEventListener("input", (e: any) => {
++      const newValue = e.detail.value;
++      
+       let task = getLastTranslateTask({
+         id: this._taskID,
+       });
+       if (!task) {
+         task = addTranslateTask(
+-          (e.target as HTMLTextAreaElement).value,
++          newValue,
+           this.item?.id,
+           "text",
+         );
+@@ -201,10 +208,11 @@ export class TranslatorPanel extends PluginCEBase {
+       }
+       const reverseRawResult = getPref("rawResultOrder");
+       if (!reverseRawResult) {
+-        task.result = (e.target as HTMLTextAreaElement).value;
++        task.result = newValue;
+       } else {
+-        task.raw = (e.target as HTMLTextAreaElement).value;
++        task.raw = newValue;
+       }
++      
+       putTranslateTaskAtHead(task.id);
+     });
+ 
+@@ -336,6 +344,7 @@ export class TranslatorPanel extends PluginCEBase {
+ 
+   destroy(): void {}
+ 
++
+   render() {
+     const updateHidden = (type: string, pref: string) => {
+       const elem = this._queryID(type) as XUL.Box;
+@@ -353,15 +362,33 @@ export class TranslatorPanel extends PluginCEBase {
+       elem.checked = checked;
+     };
+     const setValue = (type: string, value: string) => {
+-      const elem = this._queryID(type) as XUL.Textbox;
+-      elem.value = value;
++      if (type === "result-text") {
++        // Use math-textbox for result text (with math rendering capability)
++        const mathTextbox = this._queryID(type) as any; // MathTextboxElement
++        if (mathTextbox) {
++          mathTextbox.value = value;
++        }
++      } else {
++        // Use regular textbox for other elements
++        const elem = this._queryID(type) as XULTextBoxElement;
++        elem.value = value;
++      }
+     };
+     const setPalceHolder = (type: string, placeholder: string) => {
+-      const elem = this._queryID(type) as XUL.Textbox;
+-      elem.placeholder = placeholder;
++      if (type === "result-text") {
++        // Use math-textbox for result text
++        const mathTextbox = this._queryID(type) as any; // MathTextboxElement
++        if (mathTextbox) {
++          mathTextbox.placeholder = placeholder;
++        }
++      } else {
++        // Use regular textbox for other elements
++        const elem = this._queryID(type) as XULTextBoxElement;
++        elem.placeholder = placeholder;
++      }
+     };
+     const setTextBoxStyle = (type: string) => {
+-      const elem = this._queryID(type) as XUL.Textbox;
++      const elem = this._queryID(type) as XULTextBoxElement;
+       elem.style.fontSize = `${getPref("fontSize")}px`;
+       elem.style.lineHeight = getPref("lineHeight") as string;
+     };

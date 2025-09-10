@@ -1,0 +1,802 @@
+diff --git a/.openmcp/connection.json b/.openmcp/connection.json
+new file mode 100644
+index 0000000..17b0e6e
+--- /dev/null
++++ b/.openmcp/connection.json
+@@ -0,0 +1 @@
++{"items":[]}
+\ No newline at end of file
+diff --git a/addon/chrome/content/preferences.xhtml b/addon/chrome/content/preferences.xhtml
+index ed59c1d..6fd23f8 100644
+--- a/addon/chrome/content/preferences.xhtml
++++ b/addon/chrome/content/preferences.xhtml
+@@ -235,6 +235,13 @@
+         preference="__prefsPrefix__.stripEmptyLines"
+       />
+     </hbox>
++    <hbox align="center">
++      <checkbox
++        data-l10n-id="pref-advanced-enableMathRendering"
++        native="true"
++        preference="__prefsPrefix__.enableMathRendering"
++      />
++    </hbox>
+     <hbox align="center">
+       <checkbox
+         data-l10n-id="pref-advanced-enableAutoDetectLanguage"
+diff --git a/addon/chrome/content/styles/katex.min.css b/addon/chrome/content/styles/katex.min.css
+new file mode 100644
+index 0000000..3d176ab
+--- /dev/null
++++ b/addon/chrome/content/styles/katex.min.css
+@@ -0,0 +1 @@
++@font-face{font-family:KaTeX_AMS;font-style:normal;font-weight:400;src:url(fonts/KaTeX_AMS-Regular.woff2) format("woff2"),url(fonts/KaTeX_AMS-Regular.woff) format("woff"),url(fonts/KaTeX_AMS-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Caligraphic;font-style:normal;font-weight:700;src:url(fonts/KaTeX_Caligraphic-Bold.woff2) format("woff2"),url(fonts/KaTeX_Caligraphic-Bold.woff) format("woff"),url(fonts/KaTeX_Caligraphic-Bold.ttf) format("truetype")}@font-face{font-family:KaTeX_Caligraphic;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Caligraphic-Regular.woff2) format("woff2"),url(fonts/KaTeX_Caligraphic-Regular.woff) format("woff"),url(fonts/KaTeX_Caligraphic-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Fraktur;font-style:normal;font-weight:700;src:url(fonts/KaTeX_Fraktur-Bold.woff2) format("woff2"),url(fonts/KaTeX_Fraktur-Bold.woff) format("woff"),url(fonts/KaTeX_Fraktur-Bold.ttf) format("truetype")}@font-face{font-family:KaTeX_Fraktur;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Fraktur-Regular.woff2) format("woff2"),url(fonts/KaTeX_Fraktur-Regular.woff) format("woff"),url(fonts/KaTeX_Fraktur-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Main;font-style:normal;font-weight:700;src:url(fonts/KaTeX_Main-Bold.woff2) format("woff2"),url(fonts/KaTeX_Main-Bold.woff) format("woff"),url(fonts/KaTeX_Main-Bold.ttf) format("truetype")}@font-face{font-family:KaTeX_Main;font-style:italic;font-weight:700;src:url(fonts/KaTeX_Main-BoldItalic.woff2) format("woff2"),url(fonts/KaTeX_Main-BoldItalic.woff) format("woff"),url(fonts/KaTeX_Main-BoldItalic.ttf) format("truetype")}@font-face{font-family:KaTeX_Main;font-style:italic;font-weight:400;src:url(fonts/KaTeX_Main-Italic.woff2) format("woff2"),url(fonts/KaTeX_Main-Italic.woff) format("woff"),url(fonts/KaTeX_Main-Italic.ttf) format("truetype")}@font-face{font-family:KaTeX_Main;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Main-Regular.woff2) format("woff2"),url(fonts/KaTeX_Main-Regular.woff) format("woff"),url(fonts/KaTeX_Main-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Math;font-style:italic;font-weight:700;src:url(fonts/KaTeX_Math-BoldItalic.woff2) format("woff2"),url(fonts/KaTeX_Math-BoldItalic.woff) format("woff"),url(fonts/KaTeX_Math-BoldItalic.ttf) format("truetype")}@font-face{font-family:KaTeX_Math;font-style:italic;font-weight:400;src:url(fonts/KaTeX_Math-Italic.woff2) format("woff2"),url(fonts/KaTeX_Math-Italic.woff) format("woff"),url(fonts/KaTeX_Math-Italic.ttf) format("truetype")}@font-face{font-family:"KaTeX_SansSerif";font-style:normal;font-weight:700;src:url(fonts/KaTeX_SansSerif-Bold.woff2) format("woff2"),url(fonts/KaTeX_SansSerif-Bold.woff) format("woff"),url(fonts/KaTeX_SansSerif-Bold.ttf) format("truetype")}@font-face{font-family:"KaTeX_SansSerif";font-style:italic;font-weight:400;src:url(fonts/KaTeX_SansSerif-Italic.woff2) format("woff2"),url(fonts/KaTeX_SansSerif-Italic.woff) format("woff"),url(fonts/KaTeX_SansSerif-Italic.ttf) format("truetype")}@font-face{font-family:"KaTeX_SansSerif";font-style:normal;font-weight:400;src:url(fonts/KaTeX_SansSerif-Regular.woff2) format("woff2"),url(fonts/KaTeX_SansSerif-Regular.woff) format("woff"),url(fonts/KaTeX_SansSerif-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Script;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Script-Regular.woff2) format("woff2"),url(fonts/KaTeX_Script-Regular.woff) format("woff"),url(fonts/KaTeX_Script-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Size1;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size1-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size1-Regular.woff) format("woff"),url(fonts/KaTeX_Size1-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Size2;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size2-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size2-Regular.woff) format("woff"),url(fonts/KaTeX_Size2-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Size3;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size3-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size3-Regular.woff) format("woff"),url(fonts/KaTeX_Size3-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Size4;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size4-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size4-Regular.woff) format("woff"),url(fonts/KaTeX_Size4-Regular.ttf) format("truetype")}@font-face{font-family:KaTeX_Typewriter;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Typewriter-Regular.woff2) format("woff2"),url(fonts/KaTeX_Typewriter-Regular.woff) format("woff"),url(fonts/KaTeX_Typewriter-Regular.ttf) format("truetype")}.katex{font:normal 1.21em KaTeX_Main,Times New Roman,serif;line-height:1.2;text-indent:0;text-rendering:auto}.katex *{-ms-high-contrast-adjust:none!important;border-color:currentColor}.katex .katex-version:after{content:"0.16.22"}.katex .katex-mathml{clip:rect(1px,1px,1px,1px);border:0;height:1px;overflow:hidden;padding:0;position:absolute;width:1px}.katex .katex-html>.newline{display:block}.katex .base{position:relative;white-space:nowrap;width:-webkit-min-content;width:-moz-min-content;width:min-content}.katex .base,.katex .strut{display:inline-block}.katex .textbf{font-weight:700}.katex .textit{font-style:italic}.katex .textrm{font-family:KaTeX_Main}.katex .textsf{font-family:KaTeX_SansSerif}.katex .texttt{font-family:KaTeX_Typewriter}.katex .mathnormal{font-family:KaTeX_Math;font-style:italic}.katex .mathit{font-family:KaTeX_Main;font-style:italic}.katex .mathrm{font-style:normal}.katex .mathbf{font-family:KaTeX_Main;font-weight:700}.katex .boldsymbol{font-family:KaTeX_Math;font-style:italic;font-weight:700}.katex .amsrm,.katex .mathbb,.katex .textbb{font-family:KaTeX_AMS}.katex .mathcal{font-family:KaTeX_Caligraphic}.katex .mathfrak,.katex .textfrak{font-family:KaTeX_Fraktur}.katex .mathboldfrak,.katex .textboldfrak{font-family:KaTeX_Fraktur;font-weight:700}.katex .mathtt{font-family:KaTeX_Typewriter}.katex .mathscr,.katex .textscr{font-family:KaTeX_Script}.katex .mathsf,.katex .textsf{font-family:KaTeX_SansSerif}.katex .mathboldsf,.katex .textboldsf{font-family:KaTeX_SansSerif;font-weight:700}.katex .mathitsf,.katex .mathsfit,.katex .textitsf{font-family:KaTeX_SansSerif;font-style:italic}.katex .mainrm{font-family:KaTeX_Main;font-style:normal}.katex .vlist-t{border-collapse:collapse;display:inline-table;table-layout:fixed}.katex .vlist-r{display:table-row}.katex .vlist{display:table-cell;position:relative;vertical-align:bottom}.katex .vlist>span{display:block;height:0;position:relative}.katex .vlist>span>span{display:inline-block}.katex .vlist>span>.pstrut{overflow:hidden;width:0}.katex .vlist-t2{margin-right:-2px}.katex .vlist-s{display:table-cell;font-size:1px;min-width:2px;vertical-align:bottom;width:2px}.katex .vbox{align-items:baseline;display:inline-flex;flex-direction:column}.katex .hbox{width:100%}.katex .hbox,.katex .thinbox{display:inline-flex;flex-direction:row}.katex .thinbox{max-width:0;width:0}.katex .msupsub{text-align:left}.katex .mfrac>span>span{text-align:center}.katex .mfrac .frac-line{border-bottom-style:solid;display:inline-block;width:100%}.katex .hdashline,.katex .hline,.katex .mfrac .frac-line,.katex .overline .overline-line,.katex .rule,.katex .underline .underline-line{min-height:1px}.katex .mspace{display:inline-block}.katex .clap,.katex .llap,.katex .rlap{position:relative;width:0}.katex .clap>.inner,.katex .llap>.inner,.katex .rlap>.inner{position:absolute}.katex .clap>.fix,.katex .llap>.fix,.katex .rlap>.fix{display:inline-block}.katex .llap>.inner{right:0}.katex .clap>.inner,.katex .rlap>.inner{left:0}.katex .clap>.inner>span{margin-left:-50%;margin-right:50%}.katex .rule{border:0 solid;display:inline-block;position:relative}.katex .hline,.katex .overline .overline-line,.katex .underline .underline-line{border-bottom-style:solid;display:inline-block;width:100%}.katex .hdashline{border-bottom-style:dashed;display:inline-block;width:100%}.katex .sqrt>.root{margin-left:.2777777778em;margin-right:-.5555555556em}.katex .fontsize-ensurer.reset-size1.size1,.katex .sizing.reset-size1.size1{font-size:1em}.katex .fontsize-ensurer.reset-size1.size2,.katex .sizing.reset-size1.size2{font-size:1.2em}.katex .fontsize-ensurer.reset-size1.size3,.katex .sizing.reset-size1.size3{font-size:1.4em}.katex .fontsize-ensurer.reset-size1.size4,.katex .sizing.reset-size1.size4{font-size:1.6em}.katex .fontsize-ensurer.reset-size1.size5,.katex .sizing.reset-size1.size5{font-size:1.8em}.katex .fontsize-ensurer.reset-size1.size6,.katex .sizing.reset-size1.size6{font-size:2em}.katex .fontsize-ensurer.reset-size1.size7,.katex .sizing.reset-size1.size7{font-size:2.4em}.katex .fontsize-ensurer.reset-size1.size8,.katex .sizing.reset-size1.size8{font-size:2.88em}.katex .fontsize-ensurer.reset-size1.size9,.katex .sizing.reset-size1.size9{font-size:3.456em}.katex .fontsize-ensurer.reset-size1.size10,.katex .sizing.reset-size1.size10{font-size:4.148em}.katex .fontsize-ensurer.reset-size1.size11,.katex .sizing.reset-size1.size11{font-size:4.976em}.katex .fontsize-ensurer.reset-size2.size1,.katex .sizing.reset-size2.size1{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size2.size2,.katex .sizing.reset-size2.size2{font-size:1em}.katex .fontsize-ensurer.reset-size2.size3,.katex .sizing.reset-size2.size3{font-size:1.1666666667em}.katex .fontsize-ensurer.reset-size2.size4,.katex .sizing.reset-size2.size4{font-size:1.3333333333em}.katex .fontsize-ensurer.reset-size2.size5,.katex .sizing.reset-size2.size5{font-size:1.5em}.katex .fontsize-ensurer.reset-size2.size6,.katex .sizing.reset-size2.size6{font-size:1.6666666667em}.katex .fontsize-ensurer.reset-size2.size7,.katex .sizing.reset-size2.size7{font-size:2em}.katex .fontsize-ensurer.reset-size2.size8,.katex .sizing.reset-size2.size8{font-size:2.4em}.katex .fontsize-ensurer.reset-size2.size9,.katex .sizing.reset-size2.size9{font-size:2.88em}.katex .fontsize-ensurer.reset-size2.size10,.katex .sizing.reset-size2.size10{font-size:3.4566666667em}.katex .fontsize-ensurer.reset-size2.size11,.katex .sizing.reset-size2.size11{font-size:4.1466666667em}.katex .fontsize-ensurer.reset-size3.size1,.katex .sizing.reset-size3.size1{font-size:.7142857143em}.katex .fontsize-ensurer.reset-size3.size2,.katex .sizing.reset-size3.size2{font-size:.8571428571em}.katex .fontsize-ensurer.reset-size3.size3,.katex .sizing.reset-size3.size3{font-size:1em}.katex .fontsize-ensurer.reset-size3.size4,.katex .sizing.reset-size3.size4{font-size:1.1428571429em}.katex .fontsize-ensurer.reset-size3.size5,.katex .sizing.reset-size3.size5{font-size:1.2857142857em}.katex .fontsize-ensurer.reset-size3.size6,.katex .sizing.reset-size3.size6{font-size:1.4285714286em}.katex .fontsize-ensurer.reset-size3.size7,.katex .sizing.reset-size3.size7{font-size:1.7142857143em}.katex .fontsize-ensurer.reset-size3.size8,.katex .sizing.reset-size3.size8{font-size:2.0571428571em}.katex .fontsize-ensurer.reset-size3.size9,.katex .sizing.reset-size3.size9{font-size:2.4685714286em}.katex .fontsize-ensurer.reset-size3.size10,.katex .sizing.reset-size3.size10{font-size:2.9628571429em}.katex .fontsize-ensurer.reset-size3.size11,.katex .sizing.reset-size3.size11{font-size:3.5542857143em}.katex .fontsize-ensurer.reset-size4.size1,.katex .sizing.reset-size4.size1{font-size:.625em}.katex .fontsize-ensurer.reset-size4.size2,.katex .sizing.reset-size4.size2{font-size:.75em}.katex .fontsize-ensurer.reset-size4.size3,.katex .sizing.reset-size4.size3{font-size:.875em}.katex .fontsize-ensurer.reset-size4.size4,.katex .sizing.reset-size4.size4{font-size:1em}.katex .fontsize-ensurer.reset-size4.size5,.katex .sizing.reset-size4.size5{font-size:1.125em}.katex .fontsize-ensurer.reset-size4.size6,.katex .sizing.reset-size4.size6{font-size:1.25em}.katex .fontsize-ensurer.reset-size4.size7,.katex .sizing.reset-size4.size7{font-size:1.5em}.katex .fontsize-ensurer.reset-size4.size8,.katex .sizing.reset-size4.size8{font-size:1.8em}.katex .fontsize-ensurer.reset-size4.size9,.katex .sizing.reset-size4.size9{font-size:2.16em}.katex .fontsize-ensurer.reset-size4.size10,.katex .sizing.reset-size4.size10{font-size:2.5925em}.katex .fontsize-ensurer.reset-size4.size11,.katex .sizing.reset-size4.size11{font-size:3.11em}.katex .fontsize-ensurer.reset-size5.size1,.katex .sizing.reset-size5.size1{font-size:.5555555556em}.katex .fontsize-ensurer.reset-size5.size2,.katex .sizing.reset-size5.size2{font-size:.6666666667em}.katex .fontsize-ensurer.reset-size5.size3,.katex .sizing.reset-size5.size3{font-size:.7777777778em}.katex .fontsize-ensurer.reset-size5.size4,.katex .sizing.reset-size5.size4{font-size:.8888888889em}.katex .fontsize-ensurer.reset-size5.size5,.katex .sizing.reset-size5.size5{font-size:1em}.katex .fontsize-ensurer.reset-size5.size6,.katex .sizing.reset-size5.size6{font-size:1.1111111111em}.katex .fontsize-ensurer.reset-size5.size7,.katex .sizing.reset-size5.size7{font-size:1.3333333333em}.katex .fontsize-ensurer.reset-size5.size8,.katex .sizing.reset-size5.size8{font-size:1.6em}.katex .fontsize-ensurer.reset-size5.size9,.katex .sizing.reset-size5.size9{font-size:1.92em}.katex .fontsize-ensurer.reset-size5.size10,.katex .sizing.reset-size5.size10{font-size:2.3044444444em}.katex .fontsize-ensurer.reset-size5.size11,.katex .sizing.reset-size5.size11{font-size:2.7644444444em}.katex .fontsize-ensurer.reset-size6.size1,.katex .sizing.reset-size6.size1{font-size:.5em}.katex .fontsize-ensurer.reset-size6.size2,.katex .sizing.reset-size6.size2{font-size:.6em}.katex .fontsize-ensurer.reset-size6.size3,.katex .sizing.reset-size6.size3{font-size:.7em}.katex .fontsize-ensurer.reset-size6.size4,.katex .sizing.reset-size6.size4{font-size:.8em}.katex .fontsize-ensurer.reset-size6.size5,.katex .sizing.reset-size6.size5{font-size:.9em}.katex .fontsize-ensurer.reset-size6.size6,.katex .sizing.reset-size6.size6{font-size:1em}.katex .fontsize-ensurer.reset-size6.size7,.katex .sizing.reset-size6.size7{font-size:1.2em}.katex .fontsize-ensurer.reset-size6.size8,.katex .sizing.reset-size6.size8{font-size:1.44em}.katex .fontsize-ensurer.reset-size6.size9,.katex .sizing.reset-size6.size9{font-size:1.728em}.katex .fontsize-ensurer.reset-size6.size10,.katex .sizing.reset-size6.size10{font-size:2.074em}.katex .fontsize-ensurer.reset-size6.size11,.katex .sizing.reset-size6.size11{font-size:2.488em}.katex .fontsize-ensurer.reset-size7.size1,.katex .sizing.reset-size7.size1{font-size:.4166666667em}.katex .fontsize-ensurer.reset-size7.size2,.katex .sizing.reset-size7.size2{font-size:.5em}.katex .fontsize-ensurer.reset-size7.size3,.katex .sizing.reset-size7.size3{font-size:.5833333333em}.katex .fontsize-ensurer.reset-size7.size4,.katex .sizing.reset-size7.size4{font-size:.6666666667em}.katex .fontsize-ensurer.reset-size7.size5,.katex .sizing.reset-size7.size5{font-size:.75em}.katex .fontsize-ensurer.reset-size7.size6,.katex .sizing.reset-size7.size6{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size7.size7,.katex .sizing.reset-size7.size7{font-size:1em}.katex .fontsize-ensurer.reset-size7.size8,.katex .sizing.reset-size7.size8{font-size:1.2em}.katex .fontsize-ensurer.reset-size7.size9,.katex .sizing.reset-size7.size9{font-size:1.44em}.katex .fontsize-ensurer.reset-size7.size10,.katex .sizing.reset-size7.size10{font-size:1.7283333333em}.katex .fontsize-ensurer.reset-size7.size11,.katex .sizing.reset-size7.size11{font-size:2.0733333333em}.katex .fontsize-ensurer.reset-size8.size1,.katex .sizing.reset-size8.size1{font-size:.3472222222em}.katex .fontsize-ensurer.reset-size8.size2,.katex .sizing.reset-size8.size2{font-size:.4166666667em}.katex .fontsize-ensurer.reset-size8.size3,.katex .sizing.reset-size8.size3{font-size:.4861111111em}.katex .fontsize-ensurer.reset-size8.size4,.katex .sizing.reset-size8.size4{font-size:.5555555556em}.katex .fontsize-ensurer.reset-size8.size5,.katex .sizing.reset-size8.size5{font-size:.625em}.katex .fontsize-ensurer.reset-size8.size6,.katex .sizing.reset-size8.size6{font-size:.6944444444em}.katex .fontsize-ensurer.reset-size8.size7,.katex .sizing.reset-size8.size7{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size8.size8,.katex .sizing.reset-size8.size8{font-size:1em}.katex .fontsize-ensurer.reset-size8.size9,.katex .sizing.reset-size8.size9{font-size:1.2em}.katex .fontsize-ensurer.reset-size8.size10,.katex .sizing.reset-size8.size10{font-size:1.4402777778em}.katex .fontsize-ensurer.reset-size8.size11,.katex .sizing.reset-size8.size11{font-size:1.7277777778em}.katex .fontsize-ensurer.reset-size9.size1,.katex .sizing.reset-size9.size1{font-size:.2893518519em}.katex .fontsize-ensurer.reset-size9.size2,.katex .sizing.reset-size9.size2{font-size:.3472222222em}.katex .fontsize-ensurer.reset-size9.size3,.katex .sizing.reset-size9.size3{font-size:.4050925926em}.katex .fontsize-ensurer.reset-size9.size4,.katex .sizing.reset-size9.size4{font-size:.462962963em}.katex .fontsize-ensurer.reset-size9.size5,.katex .sizing.reset-size9.size5{font-size:.5208333333em}.katex .fontsize-ensurer.reset-size9.size6,.katex .sizing.reset-size9.size6{font-size:.5787037037em}.katex .fontsize-ensurer.reset-size9.size7,.katex .sizing.reset-size9.size7{font-size:.6944444444em}.katex .fontsize-ensurer.reset-size9.size8,.katex .sizing.reset-size9.size8{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size9.size9,.katex .sizing.reset-size9.size9{font-size:1em}.katex .fontsize-ensurer.reset-size9.size10,.katex .sizing.reset-size9.size10{font-size:1.2002314815em}.katex .fontsize-ensurer.reset-size9.size11,.katex .sizing.reset-size9.size11{font-size:1.4398148148em}.katex .fontsize-ensurer.reset-size10.size1,.katex .sizing.reset-size10.size1{font-size:.2410800386em}.katex .fontsize-ensurer.reset-size10.size2,.katex .sizing.reset-size10.size2{font-size:.2892960463em}.katex .fontsize-ensurer.reset-size10.size3,.katex .sizing.reset-size10.size3{font-size:.337512054em}.katex .fontsize-ensurer.reset-size10.size4,.katex .sizing.reset-size10.size4{font-size:.3857280617em}.katex .fontsize-ensurer.reset-size10.size5,.katex .sizing.reset-size10.size5{font-size:.4339440694em}.katex .fontsize-ensurer.reset-size10.size6,.katex .sizing.reset-size10.size6{font-size:.4821600771em}.katex .fontsize-ensurer.reset-size10.size7,.katex .sizing.reset-size10.size7{font-size:.5785920926em}.katex .fontsize-ensurer.reset-size10.size8,.katex .sizing.reset-size10.size8{font-size:.6943105111em}.katex .fontsize-ensurer.reset-size10.size9,.katex .sizing.reset-size10.size9{font-size:.8331726133em}.katex .fontsize-ensurer.reset-size10.size10,.katex .sizing.reset-size10.size10{font-size:1em}.katex .fontsize-ensurer.reset-size10.size11,.katex .sizing.reset-size10.size11{font-size:1.1996142719em}.katex .fontsize-ensurer.reset-size11.size1,.katex .sizing.reset-size11.size1{font-size:.2009646302em}.katex .fontsize-ensurer.reset-size11.size2,.katex .sizing.reset-size11.size2{font-size:.2411575563em}.katex .fontsize-ensurer.reset-size11.size3,.katex .sizing.reset-size11.size3{font-size:.2813504823em}.katex .fontsize-ensurer.reset-size11.size4,.katex .sizing.reset-size11.size4{font-size:.3215434084em}.katex .fontsize-ensurer.reset-size11.size5,.katex .sizing.reset-size11.size5{font-size:.3617363344em}.katex .fontsize-ensurer.reset-size11.size6,.katex .sizing.reset-size11.size6{font-size:.4019292605em}.katex .fontsize-ensurer.reset-size11.size7,.katex .sizing.reset-size11.size7{font-size:.4823151125em}.katex .fontsize-ensurer.reset-size11.size8,.katex .sizing.reset-size11.size8{font-size:.578778135em}.katex .fontsize-ensurer.reset-size11.size9,.katex .sizing.reset-size11.size9{font-size:.6945337621em}.katex .fontsize-ensurer.reset-size11.size10,.katex .sizing.reset-size11.size10{font-size:.8336012862em}.katex .fontsize-ensurer.reset-size11.size11,.katex .sizing.reset-size11.size11{font-size:1em}.katex .delimsizing.size1{font-family:KaTeX_Size1}.katex .delimsizing.size2{font-family:KaTeX_Size2}.katex .delimsizing.size3{font-family:KaTeX_Size3}.katex .delimsizing.size4{font-family:KaTeX_Size4}.katex .delimsizing.mult .delim-size1>span{font-family:KaTeX_Size1}.katex .delimsizing.mult .delim-size4>span{font-family:KaTeX_Size4}.katex .nulldelimiter{display:inline-block;width:.12em}.katex .delimcenter,.katex .op-symbol{position:relative}.katex .op-symbol.small-op{font-family:KaTeX_Size1}.katex .op-symbol.large-op{font-family:KaTeX_Size2}.katex .accent>.vlist-t,.katex .op-limits>.vlist-t{text-align:center}.katex .accent .accent-body{position:relative}.katex .accent .accent-body:not(.accent-full){width:0}.katex .overlay{display:block}.katex .mtable .vertical-separator{display:inline-block;min-width:1px}.katex .mtable .arraycolsep{display:inline-block}.katex .mtable .col-align-c>.vlist-t{text-align:center}.katex .mtable .col-align-l>.vlist-t{text-align:left}.katex .mtable .col-align-r>.vlist-t{text-align:right}.katex .svg-align{text-align:left}.katex svg{fill:currentColor;stroke:currentColor;fill-rule:nonzero;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;display:block;height:inherit;position:absolute;width:100%}.katex svg path{stroke:none}.katex img{border-style:none;max-height:none;max-width:none;min-height:0;min-width:0}.katex .stretchy{display:block;overflow:hidden;position:relative;width:100%}.katex .stretchy:after,.katex .stretchy:before{content:""}.katex .hide-tail{overflow:hidden;position:relative;width:100%}.katex .halfarrow-left{left:0;overflow:hidden;position:absolute;width:50.2%}.katex .halfarrow-right{overflow:hidden;position:absolute;right:0;width:50.2%}.katex .brace-left{left:0;overflow:hidden;position:absolute;width:25.1%}.katex .brace-center{left:25%;overflow:hidden;position:absolute;width:50%}.katex .brace-right{overflow:hidden;position:absolute;right:0;width:25.1%}.katex .x-arrow-pad{padding:0 .5em}.katex .cd-arrow-pad{padding:0 .55556em 0 .27778em}.katex .mover,.katex .munder,.katex .x-arrow{text-align:center}.katex .boxpad{padding:0 .3em}.katex .fbox,.katex .fcolorbox{border:.04em solid;box-sizing:border-box}.katex .cancel-pad{padding:0 .2em}.katex .cancel-lap{margin-left:-.2em;margin-right:-.2em}.katex .sout{border-bottom-style:solid;border-bottom-width:.08em}.katex .angl{border-right:.049em solid;border-top:.049em solid;box-sizing:border-box;margin-right:.03889em}.katex .anglpad{padding:0 .03889em}.katex .eqn-num:before{content:"(" counter(katexEqnNo) ")";counter-increment:katexEqnNo}.katex .mml-eqn-num:before{content:"(" counter(mmlEqnNo) ")";counter-increment:mmlEqnNo}.katex .mtr-glue{width:50%}.katex .cd-vert-arrow{display:inline-block;position:relative}.katex .cd-label-left{display:inline-block;position:absolute;right:calc(50% + .3em);text-align:left}.katex .cd-label-right{display:inline-block;left:calc(50% + .3em);position:absolute;text-align:right}.katex-display{display:block;margin:1em 0;text-align:center}.katex-display>.katex{display:block;text-align:center;white-space:nowrap}.katex-display>.katex>.katex-html{display:block;position:relative}.katex-display>.katex>.katex-html>.tag{position:absolute;right:0}.katex-display.leqno>.katex>.katex-html>.tag{left:0;right:auto}.katex-display.fleqn>.katex{padding-left:2em;text-align:left}body{counter-reset:katexEqnNo mmlEqnNo}
+diff --git a/addon/chrome/content/styles/panel.css b/addon/chrome/content/styles/panel.css
+index f07532b..9e86a99 100644
+--- a/addon/chrome/content/styles/panel.css
++++ b/addon/chrome/content/styles/panel.css
+@@ -36,6 +36,111 @@ translator-plugin-panel editable-text {
+   min-height: 100px;
+ }
+ 
++
++translator-plugin-panel math-textbox {
++  display: flex;
++  flex-direction: column;
++  width: 100%;
++  min-height: 100px;
++  flex: 1;
++  overflow: hidden;
++  position: relative;
++  /* unify field tokens */
++  --editor-padding: 8px;
++  --editor-radius: 4px;
++  --editor-border: 1px solid var(--field-border-color);
++  --editor-background: var(--field-background-color);
++}
++
++/* When overlay is visible, keep the textbox box model but hide its text to prevent overlap */
++translator-plugin-panel math-textbox[overlay-visible] editable-text {
++  visibility: hidden; /* fully hide text paint to avoid ghosting */
++}
++
++translator-plugin-panel math-textbox editable-text {
++  flex: 1;
++  min-height: 100px;
++  white-space: pre-wrap;
++  word-wrap: break-word;
++  resize: none;
++  margin: 0; /* Keep margins zero to prevent focus/blur shrink */
++  box-sizing: border-box;
++  padding: var(--editor-padding);
++  border: var(--editor-border);
++  border-radius: var(--editor-radius);
++  background: var(--editor-background);
++  font: inherit;
++  line-height: inherit;
++}
++
++translator-plugin-panel math-textbox editable-text:focus {
++  overflow: auto !important;
++}
++
++/* Unified focus ring for all editable-text instances inside panel */
++translator-plugin-panel editable-text:focus,
++translator-plugin-panel editable-text:focus-visible {
++  outline: none;
++  box-shadow: inset 0 0 0 2px AccentColor;
++}
++
++translator-plugin-panel math-textbox .math-overlay {
++  position: absolute;
++  top: 0;
++  left: 0;
++  right: 0;
++  bottom: 0;
++  white-space: pre-wrap;
++  word-wrap: break-word;  
++  overflow: auto;
++  scrollbar-width: none;
++  -ms-overflow-style: none;
++  z-index: 10;
++  cursor: pointer;
++  box-sizing: border-box;
++  padding: var(--editor-padding);
++  border: var(--editor-border);
++  border-radius: var(--editor-radius);
++  background: var(--editor-background);
++  font: inherit;
++  line-height: inherit;
++  letter-spacing: inherit;
++  text-align: inherit;
++  text-indent: inherit;
++  scrollbar-gutter: stable both-edges;
++}
++
++/* Unify scrollbar visibility: hide visual rails but keep scroll functionality */
++translator-plugin-panel math-textbox editable-text,
++translator-plugin-panel math-textbox .math-overlay {
++  scrollbar-width: none; /* Firefox */
++  -ms-overflow-style: none; /* IE/Edge */
++  scrollbar-gutter: stable both-edges; /* keep width stable across states */
++}
++translator-plugin-panel math-textbox editable-text::-webkit-scrollbar,
++translator-plugin-panel math-textbox .math-overlay::-webkit-scrollbar {
++  width: 0;
++  height: 0;
++}
++
++/* Keep default scrollbar visible for stability and discoverability */
++
++translator-plugin-panel math-textbox .katex {
++  font-size: inherit !important;
++  line-height: inherit !important;
++  color: var(--fill-primary);
++  letter-spacing: inherit;
++}
++
++translator-plugin-panel math-textbox .katex-display {
++  margin: 0.5em 0 !important;
++  text-align: center;
++}
++
++translator-plugin-panel math-textbox .katex-html {
++  white-space: normal;
++}
++
+ translator-plugin-panel .editor-container {
+   display: flex;
+   flex: 1;
+diff --git a/addon/locale/en-US/preferences.ftl b/addon/locale/en-US/preferences.ftl
+index 8091a74..83c37ac 100644
+--- a/addon/locale/en-US/preferences.ftl
++++ b/addon/locale/en-US/preferences.ftl
+@@ -123,3 +123,6 @@ pref-about-version =
+ 
+ pref-advanced-stripEmptyLines =
+     .label = Strip empty lines and thinking from translation results
++
++pref-advanced-enableMathRendering =
++    .label = Render math formulas (requires LLM inference, supports $...$ and \(...\) formats)
+diff --git a/addon/locale/it-IT/preferences.ftl b/addon/locale/it-IT/preferences.ftl
+index 02ab855..020b237 100644
+--- a/addon/locale/it-IT/preferences.ftl
++++ b/addon/locale/it-IT/preferences.ftl
+@@ -123,3 +123,6 @@ pref-about-version =
+ 
+ pref-advanced-stripEmptyLines =
+     .label = Rimuovi le righe vuote e pensieri dai risultati della traduzione
++
++pref-advanced-enableMathRendering =
++    .label = Renderizza formule matematiche (richiede inferenza LLM, supporta formati $...$ e \(...\))
+diff --git a/addon/locale/zh-CN/preferences.ftl b/addon/locale/zh-CN/preferences.ftl
+index f651531..65b5acb 100644
+--- a/addon/locale/zh-CN/preferences.ftl
++++ b/addon/locale/zh-CN/preferences.ftl
+@@ -124,3 +124,6 @@ pref-about-version =
+ pref-advanced-stripEmptyLines =
+     .label = 从翻译结果中删除空行和思考内容
+ 
++pref-advanced-enableMathRendering =
++    .label = 渲染数学公式（依赖LLM推理，支持$...$和\(...\)格式）
++
+diff --git a/addon/prefs.js b/addon/prefs.js
+index 371b988..3489fd1 100644
+--- a/addon/prefs.js
++++ b/addon/prefs.js
+@@ -95,6 +95,7 @@ pref("__prefsPrefix__.aliyun.action", "TranslateGeneral");
+ pref("__prefsPrefix__.aliyun.scene", "general");
+ 
+ pref("__prefsPrefix__.stripEmptyLines", false);
++pref("__prefsPrefix__.enableMathRendering", true);
+ pref("__prefsPrefix__.libretranslate.endpoint", "http://localhost:5000");
+ pref("__prefsPrefix__.mtranserver.endpoint", "http://localhost:8989/translate");
+ pref("__prefsPrefix__.mtranserver.versionlabel", false);
+diff --git a/package-lock.json b/package-lock.json
+index 16b94b5..44dc15b 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -12,6 +12,7 @@
+         "franc": "^6.2.0",
+         "iso639-js": "^1.1.3",
+         "jsencrypt": "^3.5.0",
++        "katex": "^0.16.22",
+         "zotero-plugin-toolkit": "^5.1.0-beta.8"
+       },
+       "devDependencies": {
+@@ -3622,6 +3623,31 @@
+         "setimmediate": "^1.0.5"
+       }
+     },
++    "node_modules/katex": {
++      "version": "0.16.22",
++      "resolved": "https://registry.npmjs.org/katex/-/katex-0.16.22.tgz",
++      "integrity": "sha512-XCHRdUw4lf3SKBaJe4EvgqIuWwkPSo9XoeO8GjQW94Bp7TWv9hNhzZjZ+OH9yf1UmLygb7DIT5GSFQiyt16zYg==",
++      "funding": [
++        "https://opencollective.com/katex",
++        "https://github.com/sponsors/katex"
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "commander": "^8.3.0"
++      },
++      "bin": {
++        "katex": "cli.js"
++      }
++    },
++    "node_modules/katex/node_modules/commander": {
++      "version": "8.3.0",
++      "resolved": "https://registry.npmjs.org/commander/-/commander-8.3.0.tgz",
++      "integrity": "sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 12"
++      }
++    },
+     "node_modules/keyv": {
+       "version": "4.5.4",
+       "resolved": "https://registry.npmjs.org/keyv/-/keyv-4.5.4.tgz",
+diff --git a/package.json b/package.json
+index 1b8b4a6..24e0bc4 100644
+--- a/package.json
++++ b/package.json
+@@ -32,6 +32,7 @@
+     "franc": "^6.2.0",
+     "iso639-js": "^1.1.3",
+     "jsencrypt": "^3.5.0",
++    "katex": "^0.16.22",
+     "zotero-plugin-toolkit": "^5.1.0-beta.8"
+   },
+   "devDependencies": {
+diff --git a/src/elements/mathTextbox.ts b/src/elements/mathTextbox.ts
+new file mode 100644
+index 0000000..942cd44
+--- /dev/null
++++ b/src/elements/mathTextbox.ts
+@@ -0,0 +1,203 @@
++import { getPref } from "../utils/prefs";
++import { renderMathInText, containsMath } from "../utils/mathRenderer";
++
++/**
++ * Custom element that wraps editable-text with math formula rendering capabilities
++ */
++export class MathTextboxElement extends XULElementBase {
++  private _textbox: XULTextBoxElement | null = null;
++  private _overlay: HTMLDivElement | null = null;
++  private _currentValue: string = "";
++  private _lastScrollTop: number = 0;
++  private _lastScrollLeft: number = 0;
++  private _resizeObserver: ResizeObserver | null = null;
++  
++  get content() {
++    return MozXULElement.parseXULToFragment(`
++      <editable-text id="inner-textbox" multiline="true" />
++    `);
++  }
++
++  connectedCallback(): void {
++    super.connectedCallback();
++    this.initialized = true;
++    this.init();
++  }
++
++  init(): void {
++    this._textbox = this.querySelector("#inner-textbox") as XULTextBoxElement;
++    if (!this._textbox) return;
++
++    this._textbox.addEventListener("input", this._handleInput);
++    this._textbox.addEventListener("focus", this._handleFocus);
++    this._textbox.addEventListener("blur", this._handleBlur);
++
++    // Keep a stable max-height CSS var in sync with container size
++    this._resizeObserver = new ResizeObserver(() => {
++      this._setMaxHeightVar();
++    });
++    this._resizeObserver.observe(this);
++    // Initialize var once mounted
++    this._setMaxHeightVar();
++  }
++
++  get value(): string {
++    return this._textbox?.value || "";
++  }
++
++  set value(val: string) {
++    if (!this._textbox) return;
++    
++    this._currentValue = val;
++    this._textbox.value = val;
++    this._updateMathOverlay();
++  }
++
++  get placeholder(): string {
++    return this._textbox?.placeholder || "";
++  }
++
++  set placeholder(val: string) {
++    if (this._textbox) {
++      this._textbox.placeholder = val;
++    }
++  }
++
++  focus(): void {
++    this._textbox?.focus();
++  }
++
++  private _handleInput = (e: Event): void => {
++    const value = (e.target as HTMLTextAreaElement).value;
++    this._currentValue = value;
++    
++    this.dispatchEvent(new CustomEvent("input", {
++      detail: { value },
++      bubbles: true
++    }));
++  }
++
++  private _handleFocus = (e: Event): void => {
++    // Persist scroll from overlay to textbox to avoid jump
++    if (this._overlay) {
++      this._lastScrollTop = this._overlay.scrollTop;
++      this._lastScrollLeft = this._overlay.scrollLeft;
++    }
++    this._hideMathOverlay();
++    
++    // Calculate proper height considering margins and container constraints
++    if (this._textbox) {
++      this._textbox.setAttribute('multiline', 'true');
++      // Keep CSS-driven layout stable across states
++      this._setMaxHeightVar();
++      // Restore scroll position
++      this._textbox.scrollTop = this._lastScrollTop || this._textbox.scrollTop;
++      this._textbox.scrollLeft = this._lastScrollLeft || this._textbox.scrollLeft;
++    }
++    
++    this.dispatchEvent(new CustomEvent("focus", {
++      detail: { target: e.target },
++      bubbles: true
++    }));
++  }
++
++  private _handleBlur = (e: Event): void => {
++    // Clean up focus-specific styling
++    if (this._textbox) {
++      this._lastScrollTop = this._textbox.scrollTop;
++      this._lastScrollLeft = this._textbox.scrollLeft;
++    }
++    
++    setTimeout(() => {
++      this._updateMathOverlay();
++    }, 50);
++    
++    this.dispatchEvent(new CustomEvent("blur", {
++      detail: { target: e.target },
++      bubbles: true
++    }));
++  }
++
++  private _updateMathOverlay(): void {
++    if (!getPref("enableMathRendering") || !containsMath(this._currentValue)) {
++      this._hideMathOverlay();
++      return;
++    }
++
++    this._showMathOverlay();
++  }
++
++  private _showMathOverlay(): void {
++    if (!this._textbox || !this._currentValue) return;
++
++    try {
++      this._hideMathOverlay();
++
++      this._overlay = Zotero.getMainWindow().document.createElement('div');
++      this._overlay.className = 'math-overlay';
++      
++      this._overlay.innerHTML = renderMathInText(this._currentValue);
++
++      // Sync scroll position to avoid visual jump
++      const sourceScrollTop = this._lastScrollTop || this._textbox.scrollTop || 0;
++      const sourceScrollLeft = this._lastScrollLeft || this._textbox.scrollLeft || 0;
++      this._overlay.scrollTop = sourceScrollTop;
++      this._overlay.scrollLeft = sourceScrollLeft;
++
++      // Track overlay scrolling so we can restore it when focusing back
++      this._overlay.addEventListener('scroll', () => {
++        this._lastScrollTop = this._overlay?.scrollTop || 0;
++        this._lastScrollLeft = this._overlay?.scrollLeft || 0;
++      }, { passive: true });
++
++      this._overlay.onclick = (e) => {
++        e.preventDefault();
++        // Persist current overlay scroll, then switch to edit
++        this._lastScrollTop = this._overlay?.scrollTop || 0;
++        this._lastScrollLeft = this._overlay?.scrollLeft || 0;
++        this._hideMathOverlay();
++        this._textbox?.focus();
++        // Restore the scroll position on the textbox on next frame
++        requestAnimationFrame(() => {
++          if (this._textbox) {
++            this._textbox.scrollTop = this._lastScrollTop;
++            this._textbox.scrollLeft = this._lastScrollLeft;
++          }
++        });
++      };
++
++      this.appendChild(this._overlay);
++      this.toggleAttribute('overlay-visible', true);
++    } catch (error) {
++      this._hideMathOverlay();
++    }
++  }
++
++  private _hideMathOverlay(): void {
++    if (this._overlay) {
++      // Remove overlay-visible attribute before removing element to restore textbox visuals
++      this.toggleAttribute('overlay-visible', false);
++      this._overlay.remove();
++      this._overlay = null;
++    }
++  }
++
++  destroy(): void {
++    this._hideMathOverlay();
++    if (this._textbox) {
++      this._textbox.removeEventListener("input", this._handleInput);
++      this._textbox.removeEventListener("focus", this._handleFocus);
++      this._textbox.removeEventListener("blur", this._handleBlur);
++    }
++    if (this._resizeObserver) {
++      this._resizeObserver.disconnect();
++      this._resizeObserver = null;
++    }
++  }
++
++  private _setMaxHeightVar(): void {
++    const containerRect = this.getBoundingClientRect();
++    const height = Math.max(containerRect.height, 100);
++    this.style.setProperty('--inner-max-height', `${height}px`);
++  }
++}
+\ No newline at end of file
+diff --git a/src/elements/panel.ts b/src/elements/panel.ts
+index 3c05667..8268506 100644
+--- a/src/elements/panel.ts
++++ b/src/elements/panel.ts
+@@ -9,6 +9,7 @@ import {
+   putTranslateTaskAtHead,
+ } from "../utils/task";
+ import type { TranslationServices } from "../modules/services";
++import "./mathTextbox"; // Import the math textbox custom element
+ 
+ //@ts-expect-error addon instance not typed
+ const services = Zotero[config.addonInstance].data.translate
+@@ -36,6 +37,10 @@ export class TranslatorPanel extends PluginCEBase {
+     rel="stylesheet"
+     href="chrome://${config.addonRef}/content/styles/panel.css"
+   ></html:link>
++  <html:link
++    rel="stylesheet"
++    href="chrome://${config.addonRef}/content/styles/katex.min.css"
++  ></html:link>
+ </linkset>
+ <hbox id="engine" align="center">
+   <menulist id="services" native="true">
+@@ -70,7 +75,7 @@ export class TranslatorPanel extends PluginCEBase {
+   <html:div id="resizer" class="draggable-container">
+     <html:div class="separator"></html:div>
+   </html:div>
+-  <editable-text id="result-text" multiline="true" />
++  <math-textbox id="result-text"></math-textbox>
+ </html:div>
+ <html:div class="separator"></html:div>
+ <html:div class="options-container">
+@@ -184,13 +189,15 @@ export class TranslatorPanel extends PluginCEBase {
+       putTranslateTaskAtHead(task.id);
+     });
+ 
+-    this._queryID("result-text")?.addEventListener("input", (e) => {
++    this._queryID("result-text")?.addEventListener("input", (e: any) => {
++      const newValue = e.detail.value;
++      
+       let task = getLastTranslateTask({
+         id: this._taskID,
+       });
+       if (!task) {
+         task = addTranslateTask(
+-          (e.target as HTMLTextAreaElement).value,
++          newValue,
+           this.item?.id,
+           "text",
+         );
+@@ -201,10 +208,11 @@ export class TranslatorPanel extends PluginCEBase {
+       }
+       const reverseRawResult = getPref("rawResultOrder");
+       if (!reverseRawResult) {
+-        task.result = (e.target as HTMLTextAreaElement).value;
++        task.result = newValue;
+       } else {
+-        task.raw = (e.target as HTMLTextAreaElement).value;
++        task.raw = newValue;
+       }
++      
+       putTranslateTaskAtHead(task.id);
+     });
+ 
+@@ -336,6 +344,7 @@ export class TranslatorPanel extends PluginCEBase {
+ 
+   destroy(): void {}
+ 
++
+   render() {
+     const updateHidden = (type: string, pref: string) => {
+       const elem = this._queryID(type) as XUL.Box;
+@@ -353,15 +362,33 @@ export class TranslatorPanel extends PluginCEBase {
+       elem.checked = checked;
+     };
+     const setValue = (type: string, value: string) => {
+-      const elem = this._queryID(type) as XUL.Textbox;
+-      elem.value = value;
++      if (type === "result-text") {
++        // Use math-textbox for result text (with math rendering capability)
++        const mathTextbox = this._queryID(type) as any; // MathTextboxElement
++        if (mathTextbox) {
++          mathTextbox.value = value;
++        }
++      } else {
++        // Use regular textbox for other elements
++        const elem = this._queryID(type) as XULTextBoxElement;
++        elem.value = value;
++      }
+     };
+     const setPalceHolder = (type: string, placeholder: string) => {
+-      const elem = this._queryID(type) as XUL.Textbox;
+-      elem.placeholder = placeholder;
++      if (type === "result-text") {
++        // Use math-textbox for result text
++        const mathTextbox = this._queryID(type) as any; // MathTextboxElement
++        if (mathTextbox) {
++          mathTextbox.placeholder = placeholder;
++        }
++      } else {
++        // Use regular textbox for other elements
++        const elem = this._queryID(type) as XULTextBoxElement;
++        elem.placeholder = placeholder;
++      }
+     };
+     const setTextBoxStyle = (type: string) => {
+-      const elem = this._queryID(type) as XUL.Textbox;
++      const elem = this._queryID(type) as XULTextBoxElement;
+       elem.style.fontSize = `${getPref("fontSize")}px`;
+       elem.style.lineHeight = getPref("lineHeight") as string;
+     };
+diff --git a/src/extras/customElements.ts b/src/extras/customElements.ts
+index c8f88c7..04261c7 100644
+--- a/src/extras/customElements.ts
++++ b/src/extras/customElements.ts
+@@ -1,7 +1,9 @@
+ import { TranslatorPanel } from "../elements/panel";
++import { MathTextboxElement } from "../elements/mathTextbox";
+ 
+ const elements = {
+   "translator-plugin-panel": TranslatorPanel,
++  "math-textbox": MathTextboxElement,
+ } as unknown as Record<string, CustomElementConstructor>;
+ 
+ for (const [key, constructor] of Object.entries(elements)) {
+diff --git a/src/modules/defaultPrefs.ts b/src/modules/defaultPrefs.ts
+index b62248f..5cedddd 100644
+--- a/src/modules/defaultPrefs.ts
++++ b/src/modules/defaultPrefs.ts
+@@ -92,4 +92,6 @@ export function setDefaultPrefSettings() {
+       setPref(prefKey, String(value));
+     }
+   });
++
++
+ }
+diff --git a/src/utils/mathRenderer.ts b/src/utils/mathRenderer.ts
+new file mode 100644
+index 0000000..ab09ee9
+--- /dev/null
++++ b/src/utils/mathRenderer.ts
+@@ -0,0 +1,175 @@
++import katex from "katex";
++
++/**
++ * LaTeX math formula rendering utility
++ * Uses KaTeX library to convert LaTeX formulas to HTML
++ * Supports $...$ (inline), $$...$$, \(...\) (inline), and \[...\] (display) formats
++ */
++export function renderMathInText(text: string): string {
++  if (!text) {
++    return text;
++  }
++
++  const hasMath = containsMath(text);
++  if (!hasMath) {
++    return text;
++  }
++
++  // Process display math formulas first: $$...$$ and \[...\]
++  let processed = text
++    // Process $$...$$ format
++    .replace(/\$\$([\s\S]*?)\$\$/g, (match, latex) => {
++      try {
++        const html = katex.renderToString(latex.trim(), {
++          displayMode: true,
++          throwOnError: false,
++          errorColor: "#cc0000",
++          strict: false
++        });
++        return html;
++      } catch (error) {
++        return match; // Return original text on rendering failure
++      }
++    })
++    // Process \[...\] format
++    .replace(/\\\[([\s\S]*?)\\\]/g, (match, latex) => {
++      try {
++        const html = katex.renderToString(latex.trim(), {
++          displayMode: true,
++          throwOnError: false,
++          errorColor: "#cc0000",
++          strict: false
++        });
++        return html;
++      } catch (error) {
++        return match; // Return original text on rendering failure
++      }
++    });
++
++  // Process inline math formulas: $...$ and \(...\) (avoid conflicts with display mode)
++  processed = processed
++    // Process $...$ format (avoid conflicts with $$...$$)
++    .replace(/(?<!\$)\$(?!\$)(.*?)\$(?!\$)/g, (match, latex) => {
++      try {
++        const html = katex.renderToString(latex.trim(), {
++          displayMode: false,
++          throwOnError: false,
++          errorColor: "#cc0000",
++          strict: false
++        });
++        return html;
++      } catch (error) {
++        return match; // Return original text on rendering failure
++      }
++    })
++    // Process \(...\) format
++    .replace(/\\\(([\s\S]*?)\\\)/g, (match, latex) => {
++      try {
++        const html = katex.renderToString(latex.trim(), {
++          displayMode: false,
++          throwOnError: false,
++          errorColor: "#cc0000",
++          strict: false
++        });
++        return html;
++      } catch (error) {
++        return match; // Return original text on rendering failure
++      }
++    });
++
++  return processed;
++}
++
++/**
++ * Render LaTeX math formulas directly into a DOM element
++ * Supports $...$ (inline), $$...$$, \(...\) (inline), and \[...\] (display) formats
++ */
++export function renderMathInElement(element: HTMLElement, text: string): void {
++  if (!element || !text) return;
++  
++  // Use innerHTML to set rendered HTML
++  element.innerHTML = renderMathInText(text);
++}
++
++/**
++ * Check if text contains LaTeX math formulas
++ * @param text Text to check
++ * @returns Whether text contains math formulas
++ */
++export function containsMath(text: string): boolean {
++  if (!text) return false;
++  // Check for $...$, $$...$$, \(...\), or \[...\] format math formulas
++  return /\$\$[\s\S]*?\$\$|\$[^$]*?\$|\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]/.test(text);
++}
++
++/**
++ * Escape HTML special characters (for non-math text portions)
++ */
++export function escapeHtml(text: string): string {
++  const div = Zotero.getMainWindow().document.createElement('div');
++  div.textContent = text;
++  return div.innerHTML;
++}
++
++/**
++ * Safe rendering of mixed text and math formulas
++ * HTML-escapes non-math portions, renders math portions with KaTeX
++ */
++export function renderMathSafely(text: string): string {
++  if (!text) return text;
++  
++  let result = '';
++  let lastIndex = 0;
++  
++  // Match all math formulas ($$...$$, $...$, \(...\), and \[...\])
++  const mathRegex = /\$\$[\s\S]*?\$\$|\$[^$]*?\$|\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]/g;
++  let match;
++  
++  while ((match = mathRegex.exec(text)) !== null) {
++    // Add escaped plain text before math formula
++    if (match.index > lastIndex) {
++      const plainText = text.slice(lastIndex, match.index);
++      result += escapeHtml(plainText);
++    }
++    
++    // Render math formula
++    const mathText = match[0];
++    let latex: string;
++    let displayMode: boolean;
++    
++    if (mathText.startsWith('$$')) {
++      latex = mathText.slice(2, -2).trim();
++      displayMode = true;
++    } else if (mathText.startsWith('\\[')) {
++      latex = mathText.slice(2, -2).trim();
++      displayMode = true;
++    } else if (mathText.startsWith('\\(')) {
++      latex = mathText.slice(2, -2).trim();
++      displayMode = false;
++    } else {
++      latex = mathText.slice(1, -1).trim();
++      displayMode = false;
++    }
++    
++    try {
++      const html = katex.renderToString(latex, {
++        displayMode: displayMode,
++        throwOnError: false,
++        errorColor: "#cc0000",
++        strict: false
++      });
++      result += html;
++    } catch (error) {
++      result += escapeHtml(mathText); // Return escaped original text on rendering failure
++    }
++    
++    lastIndex = match.index + match[0].length;
++  }
++  
++  // Add remaining plain text
++  if (lastIndex < text.length) {
++    result += escapeHtml(text.slice(lastIndex));
++  }
++  
++  return result || escapeHtml(text);
++}
+\ No newline at end of file
+diff --git a/typings/i10n.d.ts b/typings/i10n.d.ts
+index e133e74..1da949f 100644
+--- a/typings/i10n.d.ts
++++ b/typings/i10n.d.ts
+@@ -33,6 +33,7 @@ export type FluentMessageId =
+   | 'pref-advanced-disabledLanguages'
+   | 'pref-advanced-disabledLanguages-alert'
+   | 'pref-advanced-enableAutoDetectLanguage'
++  | 'pref-advanced-enableMathRendering'
+   | 'pref-advanced-extraEngines'
+   | 'pref-advanced-reset'
+   | 'pref-advanced-reset-abstractTranslation'
+diff --git a/typings/prefs.d.ts b/typings/prefs.d.ts
+index bf0f801..5262f2e 100644
+--- a/typings/prefs.d.ts
++++ b/typings/prefs.d.ts
+@@ -82,6 +82,7 @@ declare namespace _ZoteroTypes {
+       "aliyun.action": string;
+       "aliyun.scene": string;
+       "stripEmptyLines": boolean;
++      "enableMathRendering": boolean;
+       "libretranslate.endpoint": string;
+       "mtranserver.endpoint": string;
+       "mtranserver.versionlabel": boolean;

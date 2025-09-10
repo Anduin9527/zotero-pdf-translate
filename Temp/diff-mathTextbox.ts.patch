@@ -1,0 +1,210 @@
+diff --git a/src/elements/mathTextbox.ts b/src/elements/mathTextbox.ts
+new file mode 100644
+index 0000000..942cd44
+--- /dev/null
++++ b/src/elements/mathTextbox.ts
+@@ -0,0 +1,203 @@
++import { getPref } from "../utils/prefs";
++import { renderMathInText, containsMath } from "../utils/mathRenderer";
++
++/**
++ * Custom element that wraps editable-text with math formula rendering capabilities
++ */
++export class MathTextboxElement extends XULElementBase {
++  private _textbox: XULTextBoxElement | null = null;
++  private _overlay: HTMLDivElement | null = null;
++  private _currentValue: string = "";
++  private _lastScrollTop: number = 0;
++  private _lastScrollLeft: number = 0;
++  private _resizeObserver: ResizeObserver | null = null;
++  
++  get content() {
++    return MozXULElement.parseXULToFragment(`
++      <editable-text id="inner-textbox" multiline="true" />
++    `);
++  }
++
++  connectedCallback(): void {
++    super.connectedCallback();
++    this.initialized = true;
++    this.init();
++  }
++
++  init(): void {
++    this._textbox = this.querySelector("#inner-textbox") as XULTextBoxElement;
++    if (!this._textbox) return;
++
++    this._textbox.addEventListener("input", this._handleInput);
++    this._textbox.addEventListener("focus", this._handleFocus);
++    this._textbox.addEventListener("blur", this._handleBlur);
++
++    // Keep a stable max-height CSS var in sync with container size
++    this._resizeObserver = new ResizeObserver(() => {
++      this._setMaxHeightVar();
++    });
++    this._resizeObserver.observe(this);
++    // Initialize var once mounted
++    this._setMaxHeightVar();
++  }
++
++  get value(): string {
++    return this._textbox?.value || "";
++  }
++
++  set value(val: string) {
++    if (!this._textbox) return;
++    
++    this._currentValue = val;
++    this._textbox.value = val;
++    this._updateMathOverlay();
++  }
++
++  get placeholder(): string {
++    return this._textbox?.placeholder || "";
++  }
++
++  set placeholder(val: string) {
++    if (this._textbox) {
++      this._textbox.placeholder = val;
++    }
++  }
++
++  focus(): void {
++    this._textbox?.focus();
++  }
++
++  private _handleInput = (e: Event): void => {
++    const value = (e.target as HTMLTextAreaElement).value;
++    this._currentValue = value;
++    
++    this.dispatchEvent(new CustomEvent("input", {
++      detail: { value },
++      bubbles: true
++    }));
++  }
++
++  private _handleFocus = (e: Event): void => {
++    // Persist scroll from overlay to textbox to avoid jump
++    if (this._overlay) {
++      this._lastScrollTop = this._overlay.scrollTop;
++      this._lastScrollLeft = this._overlay.scrollLeft;
++    }
++    this._hideMathOverlay();
++    
++    // Calculate proper height considering margins and container constraints
++    if (this._textbox) {
++      this._textbox.setAttribute('multiline', 'true');
++      // Keep CSS-driven layout stable across states
++      this._setMaxHeightVar();
++      // Restore scroll position
++      this._textbox.scrollTop = this._lastScrollTop || this._textbox.scrollTop;
++      this._textbox.scrollLeft = this._lastScrollLeft || this._textbox.scrollLeft;
++    }
++    
++    this.dispatchEvent(new CustomEvent("focus", {
++      detail: { target: e.target },
++      bubbles: true
++    }));
++  }
++
++  private _handleBlur = (e: Event): void => {
++    // Clean up focus-specific styling
++    if (this._textbox) {
++      this._lastScrollTop = this._textbox.scrollTop;
++      this._lastScrollLeft = this._textbox.scrollLeft;
++    }
++    
++    setTimeout(() => {
++      this._updateMathOverlay();
++    }, 50);
++    
++    this.dispatchEvent(new CustomEvent("blur", {
++      detail: { target: e.target },
++      bubbles: true
++    }));
++  }
++
++  private _updateMathOverlay(): void {
++    if (!getPref("enableMathRendering") || !containsMath(this._currentValue)) {
++      this._hideMathOverlay();
++      return;
++    }
++
++    this._showMathOverlay();
++  }
++
++  private _showMathOverlay(): void {
++    if (!this._textbox || !this._currentValue) return;
++
++    try {
++      this._hideMathOverlay();
++
++      this._overlay = Zotero.getMainWindow().document.createElement('div');
++      this._overlay.className = 'math-overlay';
++      
++      this._overlay.innerHTML = renderMathInText(this._currentValue);
++
++      // Sync scroll position to avoid visual jump
++      const sourceScrollTop = this._lastScrollTop || this._textbox.scrollTop || 0;
++      const sourceScrollLeft = this._lastScrollLeft || this._textbox.scrollLeft || 0;
++      this._overlay.scrollTop = sourceScrollTop;
++      this._overlay.scrollLeft = sourceScrollLeft;
++
++      // Track overlay scrolling so we can restore it when focusing back
++      this._overlay.addEventListener('scroll', () => {
++        this._lastScrollTop = this._overlay?.scrollTop || 0;
++        this._lastScrollLeft = this._overlay?.scrollLeft || 0;
++      }, { passive: true });
++
++      this._overlay.onclick = (e) => {
++        e.preventDefault();
++        // Persist current overlay scroll, then switch to edit
++        this._lastScrollTop = this._overlay?.scrollTop || 0;
++        this._lastScrollLeft = this._overlay?.scrollLeft || 0;
++        this._hideMathOverlay();
++        this._textbox?.focus();
++        // Restore the scroll position on the textbox on next frame
++        requestAnimationFrame(() => {
++          if (this._textbox) {
++            this._textbox.scrollTop = this._lastScrollTop;
++            this._textbox.scrollLeft = this._lastScrollLeft;
++          }
++        });
++      };
++
++      this.appendChild(this._overlay);
++      this.toggleAttribute('overlay-visible', true);
++    } catch (error) {
++      this._hideMathOverlay();
++    }
++  }
++
++  private _hideMathOverlay(): void {
++    if (this._overlay) {
++      // Remove overlay-visible attribute before removing element to restore textbox visuals
++      this.toggleAttribute('overlay-visible', false);
++      this._overlay.remove();
++      this._overlay = null;
++    }
++  }
++
++  destroy(): void {
++    this._hideMathOverlay();
++    if (this._textbox) {
++      this._textbox.removeEventListener("input", this._handleInput);
++      this._textbox.removeEventListener("focus", this._handleFocus);
++      this._textbox.removeEventListener("blur", this._handleBlur);
++    }
++    if (this._resizeObserver) {
++      this._resizeObserver.disconnect();
++      this._resizeObserver = null;
++    }
++  }
++
++  private _setMaxHeightVar(): void {
++    const containerRect = this.getBoundingClientRect();
++    const height = Math.max(containerRect.height, 100);
++    this.style.setProperty('--inner-max-height', `${height}px`);
++  }
++}
+\ No newline at end of file

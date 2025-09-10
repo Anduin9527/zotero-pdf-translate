@@ -1,0 +1,116 @@
+diff --git a/addon/chrome/content/styles/panel.css b/addon/chrome/content/styles/panel.css
+index f07532b..9e86a99 100644
+--- a/addon/chrome/content/styles/panel.css
++++ b/addon/chrome/content/styles/panel.css
+@@ -36,6 +36,111 @@ translator-plugin-panel editable-text {
+   min-height: 100px;
+ }
+ 
++
++translator-plugin-panel math-textbox {
++  display: flex;
++  flex-direction: column;
++  width: 100%;
++  min-height: 100px;
++  flex: 1;
++  overflow: hidden;
++  position: relative;
++  /* unify field tokens */
++  --editor-padding: 8px;
++  --editor-radius: 4px;
++  --editor-border: 1px solid var(--field-border-color);
++  --editor-background: var(--field-background-color);
++}
++
++/* When overlay is visible, keep the textbox box model but hide its text to prevent overlap */
++translator-plugin-panel math-textbox[overlay-visible] editable-text {
++  visibility: hidden; /* fully hide text paint to avoid ghosting */
++}
++
++translator-plugin-panel math-textbox editable-text {
++  flex: 1;
++  min-height: 100px;
++  white-space: pre-wrap;
++  word-wrap: break-word;
++  resize: none;
++  margin: 0; /* Keep margins zero to prevent focus/blur shrink */
++  box-sizing: border-box;
++  padding: var(--editor-padding);
++  border: var(--editor-border);
++  border-radius: var(--editor-radius);
++  background: var(--editor-background);
++  font: inherit;
++  line-height: inherit;
++}
++
++translator-plugin-panel math-textbox editable-text:focus {
++  overflow: auto !important;
++}
++
++/* Unified focus ring for all editable-text instances inside panel */
++translator-plugin-panel editable-text:focus,
++translator-plugin-panel editable-text:focus-visible {
++  outline: none;
++  box-shadow: inset 0 0 0 2px AccentColor;
++}
++
++translator-plugin-panel math-textbox .math-overlay {
++  position: absolute;
++  top: 0;
++  left: 0;
++  right: 0;
++  bottom: 0;
++  white-space: pre-wrap;
++  word-wrap: break-word;  
++  overflow: auto;
++  scrollbar-width: none;
++  -ms-overflow-style: none;
++  z-index: 10;
++  cursor: pointer;
++  box-sizing: border-box;
++  padding: var(--editor-padding);
++  border: var(--editor-border);
++  border-radius: var(--editor-radius);
++  background: var(--editor-background);
++  font: inherit;
++  line-height: inherit;
++  letter-spacing: inherit;
++  text-align: inherit;
++  text-indent: inherit;
++  scrollbar-gutter: stable both-edges;
++}
++
++/* Unify scrollbar visibility: hide visual rails but keep scroll functionality */
++translator-plugin-panel math-textbox editable-text,
++translator-plugin-panel math-textbox .math-overlay {
++  scrollbar-width: none; /* Firefox */
++  -ms-overflow-style: none; /* IE/Edge */
++  scrollbar-gutter: stable both-edges; /* keep width stable across states */
++}
++translator-plugin-panel math-textbox editable-text::-webkit-scrollbar,
++translator-plugin-panel math-textbox .math-overlay::-webkit-scrollbar {
++  width: 0;
++  height: 0;
++}
++
++/* Keep default scrollbar visible for stability and discoverability */
++
++translator-plugin-panel math-textbox .katex {
++  font-size: inherit !important;
++  line-height: inherit !important;
++  color: var(--fill-primary);
++  letter-spacing: inherit;
++}
++
++translator-plugin-panel math-textbox .katex-display {
++  margin: 0.5em 0 !important;
++  text-align: center;
++}
++
++translator-plugin-panel math-textbox .katex-html {
++  white-space: normal;
++}
++
+ translator-plugin-panel .editor-container {
+   display: flex;
+   flex: 1;

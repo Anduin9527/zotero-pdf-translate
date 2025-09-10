@@ -1,0 +1,18 @@
+ .openmcp/connection.json                  |   1 +
+ addon/chrome/content/preferences.xhtml    |   7 ++
+ addon/chrome/content/styles/katex.min.css |   1 +
+ addon/chrome/content/styles/panel.css     | 105 ++++++++++++++++
+ addon/locale/en-US/preferences.ftl        |   3 +
+ addon/locale/it-IT/preferences.ftl        |   3 +
+ addon/locale/zh-CN/preferences.ftl        |   3 +
+ addon/prefs.js                            |   1 +
+ package-lock.json                         |  26 ++++
+ package.json                              |   1 +
+ src/elements/mathTextbox.ts               | 203 ++++++++++++++++++++++++++++++
+ src/elements/panel.ts                     |  47 +++++--
+ src/extras/customElements.ts              |   2 +
+ src/modules/defaultPrefs.ts               |   2 +
+ src/utils/mathRenderer.ts                 | 175 ++++++++++++++++++++++++++
+ typings/i10n.d.ts                         |   1 +
+ typings/prefs.d.ts                        |   1 +
+ 17 files changed, 572 insertions(+), 10 deletions(-)
